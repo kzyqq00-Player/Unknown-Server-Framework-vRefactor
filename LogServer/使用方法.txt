@@ -3,8 +3,6 @@ USF V2 服务器日志功能使用方法：
 提醒：该功能只能用于BDS服务端！存档与Realm无法使用
 
 一、前置准备
-    1.将"9472c503-5a92-43c8-7ddf-0492de2362d7"文件夹复制到BDS服务器的"config"文件夹里面
-    (每次更新服务端，您都需要做这一步)
     2.网上搜索NodeJS并下载系统对应版本
     (Windows : https://nodejs.org/dist/v20.11.0/node-v20.11.0-x64.msi)(64位系统)
     (Linux : https://nodejs.org/dist/v20.11.0/node-v20.11.0-linux-x64.tar.xz)(X86系统)(其他类型的系统自行前往官网)
@@ -30,3 +28,6 @@ USF V2 服务器日志功能使用方法：
 
 关闭服务器：输入stop，回车，即可
 日志保存在文件夹的Log文件夹内
+
+
+现在推荐使用USFLog Plus，minebbs可以搜到

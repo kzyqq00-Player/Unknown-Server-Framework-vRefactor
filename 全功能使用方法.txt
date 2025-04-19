@@ -1,6 +1,6 @@
-﻿USF全功能使用方法：
-更新日期：2024.07.30
-最新版本：0.6.28(B)
+USF全功能使用方法：
+更新日期：2024.08.14
+最新版本：0.6.30(S)
 
 一、留言板
 新建方法：放置一个讲台，手持任意一本附魔书，点击讲台，附魔书就会放在讲台中，就建好了一个留言板
@@ -61,6 +61,10 @@
 	绑定到某一物品：
 		1.手持策略文件，打开【管理界面>插件设置>全局策略文件】界面，进行绑定
 		2.绑定后，持那个物品单击方块即可打开界面
+	绑定到NPC：
+		1.手持策略文件，右键/长按NPC即可绑定
+		2.绑定后，攻击/交互都可以打开菜单
+		3.再次做绑定操作可覆盖原先的界面
 
 注意事项：
 绑定后无法直接对界面进行更改，只能用修改后的策略文件进行覆盖，因此绑定后的策略文件一定要妥善保存！
@@ -88,7 +92,7 @@
 
 
 六、USF特殊命令
-使用方法：该命令的执行者是  要执行命令的玩家
+使用方法：该命令的执行者是  要执行命令的玩家/实体
 格式：
 （需要指定某玩家时）/execute as 玩家 run scriptevent usf:command 命令
 （当@s就是这个玩家时）/scriptevent usf:command 命令
@@ -97,23 +101,27 @@
 可使用的命令：
 1.code
 用途：执行配置代码
+可执行目标：玩家
 格式：code 代码
 例子：/scriptevent usf:command code {"item":"minecraft:apple","amount":1}
 （对玩家运行一个 给予玩家1个苹果的配置代码）
 2.page
 用途：打开界面
+可执行目标：玩家
 格式：open 界面ID
 界面ID： cd(主菜单)、pos(传送界面)、store(商店界面)、board(公告)、chat(聊天设置界面)、land(领地界面)、group(群组界面)、tran(转账机)
 例子：/scriptevent usf:command open land
 （让玩家打开领地界面）
 3.hotbar
 用途：切换玩家手持物品
+可执行目标：玩家
 格式：hotbar 物品栏序号
 物品栏序号：1-9
 例子：/scriptevent usf:command hotbar 1
 （让玩家手持物品切换到物品栏第一个）
 4.name
 用途：设置玩家头顶的名字（支持转义）
+可执行目标：玩家
 格式：
 name set 名字（一次性修改，下线重置）
 name format 名字（设置名字格式，优先级大于全局名字格式）
@@ -121,11 +129,13 @@ name format 名字（设置名字格式，优先级大于全局名字格式）
 （将玩家的名字改为USF）
 5.knock
 用途：让玩家附加击退
+可执行目标：玩家
 格式：knock  x轴方向量  z轴方向量  水平方向击退力度  垂直方向击退力度（难以直接表达，自行调试）
 例子：/scriptevent usf:command knock 1.5 1.5 1 1
 （让玩家向东南方向(1.5,1.5)附加力度为1.5的击退）
 6.health
 用途：设置玩家生命值
+可执行目标：玩家
 格式：
 health set 生命值 (设置生命值)
 health add 生命值 (添加生命值)
@@ -133,29 +143,92 @@ health add 生命值 (添加生命值)
 （让玩家生命值-5）
 7.tag
 用途：设置玩家头衔
+可执行目标：玩家
 格式：tag 头衔 （头衔设置为Reset则删除头衔）
 例子：/scriptevent usf:command tag hi
 （让玩家头衔设置为hi）
 8.fire
 用途：让玩家着火
+可执行目标：玩家
 格式：fire 时间/秒 
 例子：/scriptevent usf:command fire 5
 （让玩家着火5s）
 9.show
 用途：向玩家展示消息（支持转义）
+可执行目标：任何实体
 格式：
-show chat 消息（聊天栏展示消息）
-show actionbar 消息（ActionBar展示消息）
-例子：/scriptevent usf:command show /health
-（向玩家发送消息，消息内容为ta的生命值）
+show chat 目标选择器 消息（聊天栏展示消息）
+show actionbar 目标选择器 消息（ActionBar展示消息）
+这里的目标选择器略有不同，要写成两个@号，例如@e要写成@@e
+例子：/scriptevent usf:command show chat @@a /health
+（向全体玩家发送消息，消息内容为ta的生命值）
 10.ui
 用途：用于打开方块的自定义界面（该方块不需要在常加载区块，但仅限主世界）
+可执行目标：玩家
 格式：ui x坐标.y坐标.z坐标
 例子：/scriptevent usf:command ui 0.0.0
 （若主世界0,0,0坐标的方块绑定了自定义界面，则向玩家展示该自定义界面）
+11.back
+用途：返回死亡点（仅玩家死过才能传送）
+可执行目标：玩家
+格式：back
+例子：/scriptevent usf:command back
+（让玩家返回死亡点）
+12.tpa
+用途：打开玩家传送页面
+可执行目标：玩家
+格式：tpa
+例子：/scriptevent usf:command tpa
+（让玩家打开玩家传送页面）
+13.commandblock
+用途：运行一个命令方块
+原理：在这个命令方块上方放置一个红石块，持续2tick（该命令方块要在加载的区块中）
+可执行目标：任何实体
+格式：commandblock x坐标 y坐标 z坐标
+例子：/scriptevent usf:command commandblock 0 0 0
+（锁定该实体所在维度的0,0,0坐标的方块，在其上方放置红石块，持续2tick）
+14.var
+用途：设置全局变量（注意：全局变量并非永久保存，关服即重置）
+可执行目标：任何实体
+格式：
+var set 变量名 值（将变量名设置为值）
+var copy 变量名 计分板ID（将变量名设置为该实体计分板的分数）
+var player name 变量名（将变量的值设为玩家名称）（若执行者不是玩家则无效）
+例子：
+/scriptevent usf:command var set A B
+（将变量A设置成"B"）
+/scriptevent usf:command var copy A B
+（将变量A设置成该实体在计分板"B"的分数）
+/scriptevent usf:command var player name A
+（将变量A设置成该玩家名称）
+注：若变量值带空格的话，在前面输入**，例如：/scriptevent usf:command var set A **BB AA CC
 
-
-
-
+15.test
+用途：检测计分板分数，执行命令
+可执行目标：任何实体
+格式：
+test 最小值 最大值 [测试条件] **命令
+测试条件：
+player list (玩家数量)
+tag 标签 (含标签的玩家数量)
+score 计分板ID(该实体计分板分数)
+例子：
+/scriptevent usf:command test 0 10 player list **say 玩家数量爆棚
+（当玩家数量在0-10时，发送消息"玩家数量爆棚"）
+/scriptevent usf:command test 0 10 tag ok **say 玩家数量爆棚
+（当含ok标签的玩家数量在0-10时，发送消息"玩家数量爆棚"）
+/scriptevent usf:command test 0 10 score ok **kill @s
+（当该实体在ok计分板的分数在0-10时，杀死该实体）
+16.get
+用途：获取测试数据并保存到该实体的计分板
+可执行目标：任何实体
+格式：
+get 计分板ID [获取内容]
+获取内容：
+player list (玩家数量)
+tag 标签 (含标签的玩家数量)
+例子：
+/scriptevent usf:command get ok tag usf
+（将该实体在ok计分板的分数设为 含usf标签的玩家数量）
 		
 	
