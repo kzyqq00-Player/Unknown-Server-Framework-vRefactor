@@ -7,11 +7,10 @@
 基于原版MinecraftBedrockEdition ScriptAPI
 
 当前开源版本：0.6.26(B)测试版  
-所有版本请查看压缩包内文件
-
-适用于MinecraftBE官方服务端(BDS)、个人存档、LLSE和Realms的生存辅助向、服务器管理插件
-
-作者：EarthDLL
+最新版本：0.7.4(C)社区测试版  
+更多版本请查看压缩包内文件  
+适用于MinecraftBE官方服务端(BDS)、个人存档、LLSE和Realms的生存辅助向、服务器管理插件  
+作者：EarthDLL(USFrameTeam)、XiaoXiaoYang、Antonbin(社区贡献者)
 
 
 特别鸣谢：dyf189，Command Wither，交流群全体成员  
