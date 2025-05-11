@@ -104,7 +104,17 @@ export function btnBar(){
                     }
                 }
             }else{
-                this.btns[result.selection].func(this.btns[result.selection].op)
+                const selectedIndex = result.selection;
+                if (
+                selectedIndex >= 0 &&
+                selectedIndex < this.btns.length &&
+                typeof this.btns[selectedIndex]?.func === "function"
+                ) {
+                    const { func, op } = this.btns[selectedIndex];
+                    func(op);
+                } else {
+                      console.error("无效的按钮选择:", selectedIndex);
+                }
             }
         })
     }
@@ -157,18 +167,18 @@ export function infoBar(){
         }
         this.things.push(input)
     }
-    this.range = function( id = "" ,text = "" , min = 0 , max = 1 , step = 1 , value = 0){
-        var input = {
-            "type" : "range",
-            "text" : text,
-            "min" : min,
-            "max" : max,
-            "step" : step,
-            "id" : id,
-            "value" : value
-        }
-        this.things.push(input)
-    }
+    this.range = function(id = "", text = "", min = 0, max = 1, step = 1, value = 0) {
+  const input = {
+    type: "range",
+    text: text,
+    id: id,
+    min: min,
+    max: max,
+    step: Math.max(1, step), // 步长至少为1
+    value: Math.max(min, Math.min(value, max)) // 确保默认值在范围内
+  };
+  this.things.push(input);
+};
     
     this.show = function(player,call_back){
         this.back = call_back
@@ -177,16 +187,20 @@ export function infoBar(){
         for(var cf of this.things){
             switch(cf.type){
                 case "toggle":
-                    this.ui = this.ui.toggle(cf.text,cf.value)
+                    this.ui = this.ui.toggle(cf.text,{ defaultValue: cf.value })
                     break;
                 case "input":
-                    this.ui = this.ui.textField(cf.text,cf.place,cf.value)
+                    this.ui = this.ui.textField(cf.text,cf.place,{ defaultValue: cf.value })
                     break;
                 case "range":
-                    this.ui = this.ui.slider(cf.text,cf.min,cf.max,cf.step,cf.value)
+                    this.ui = this.ui.slider(cf.text,cf.min,cf.max,
+                   {
+                     step: cf.step,
+                     defaultValue: cf.value }
+                   )
                     break;
                 case "options":
-                    this.ui = this.ui.dropdown(cf.text,cf.options,cf.value)
+                    this.ui = this.ui.dropdown(cf.text, cf.options, { defaultIndex: { defaultValue: cf.value } })
                     break;
             }
         }
