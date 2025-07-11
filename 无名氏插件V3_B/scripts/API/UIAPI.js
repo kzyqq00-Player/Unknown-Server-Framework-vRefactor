@@ -13,10 +13,10 @@ class ScriptModalFormDataRet {
   constructor(results) {
     this.results = Array.from(results);
   }
-  get(label) {
+  get(id) {
     mc.world.sendMessage(JSON.stringify(this.results));
     for (let index = 0; index < this.results.length; index++) {
-      if (this.results[index].nameSpace === label) {
+      if (this.results[index].id === id) {
         return this.results[index].result;
       }
     }
@@ -181,7 +181,7 @@ class ScriptMessageFormData {
     if (player.typeId === "minecraft:player") {
       let ui = new MessageFormData();
       ui.title(this.title);
-      ui.body(this.info);
+      if(this.info !== undefined)ui.body(this.info);
       if (this.button1 !== undefined) ui.button1(this.button1);
       if (this.button2 !== undefined) ui.button2(this.button2);
       mc.system.run(() => {
@@ -236,6 +236,7 @@ class ScriptModalFormData {
     widget: {
       typeId: "dropdown" / "toggle" / "slider" / "textField",
       setting: setting,
+      id: any,
       label: String,
       condition: function(player)
     }
@@ -305,18 +306,11 @@ class ScriptModalFormData {
                   defaultValueIndex: (this.buttonContainer[index].setting.defaultValue === undefined ? 0 : this.buttonContainer[index].setting.defaultValue)
                 }
               );
-              buttonResults.push({
-                nameSpace: this.buttonContainer[index].label,
-                result: undefined
-              });
+
               break;
             case "toggle":
               ui.toggle(this.buttonContainer[index].label, {
                 defaultValue: (this.buttonContainer[index].setting.defaultValue === undefined ? false : this.buttonContainer[index].setting.defaultValue)
-              });
-              buttonResults.push({
-                nameSpace: this.buttonContainer[index].label,
-                result: undefined
               });
               break;
             case "slider":
@@ -324,24 +318,21 @@ class ScriptModalFormData {
                 defaultValue: (this.buttonContainer[index].setting.defaultValue === undefined ? 0 : this.buttonContainer[index].setting.defaultValue),
                 valueStep: (this.buttonContainer[index].setting.step === undefined ? 1 : this.buttonContainer[index].setting.step)
               });
-              buttonResults.push({
-                nameSpace: this.buttonContainer[index].label,
-                result: undefined
-              });
+
               break;
             case "textField":
               ui.textField(this.buttonContainer[index].label, (this.buttonContainer[index].setting.placeHolderText === undefined ? "" : this.buttonContainer[index].setting.placeHolderText), {
                 defaultValue: (this.buttonContainer[index].setting.defaultValue === undefined ? "" : this.buttonContainer[index].setting.defaultValue)
               });
-              buttonResults.push({
-                nameSpace: this.buttonContainer[index].label,
-                result: undefined
-              });
               break;
             default:
 
               break;
-          }
+          };
+          buttonResults.push({
+            id: this.buttonContainer[index].id,
+            result: undefined
+          });
         }
       };
       mc.system.run(() => {
@@ -361,7 +352,7 @@ class ScriptModalFormData {
           } else {
             mc.world.sendMessage(JSON.stringify(result.formValues));
             for (let index = 0; index < buttonResults.length; index++) {
-              buttonResults[index].result = result.formValues[index + 1];
+              buttonResults[index].result = result.formValues[index];
             };
             this.events(player, new ScriptModalFormDataRet(buttonResults));
           }
