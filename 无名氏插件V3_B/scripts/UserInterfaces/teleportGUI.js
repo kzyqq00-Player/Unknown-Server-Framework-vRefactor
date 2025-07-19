@@ -4,9 +4,6 @@ import {
 import {
   UIManager
 } from "./init.js";
-import {
-  Options
-} from "../mainActivity.js"
 import * as mc from "@minecraft/server"
 //type: 1: 玩家，2: 世界
 
@@ -168,7 +165,7 @@ class PointEditGUI extends ScriptUI.ModalFormData {
         id: "point_name",
         label: "传送点名称",
         setting: {
-          defalutValue: point.name
+          defaultValue: point.name
         }
       },
       {
@@ -176,7 +173,7 @@ class PointEditGUI extends ScriptUI.ModalFormData {
         id: "point_pos",
         label: "设置传送坐标为当前位置",
         setting: {
-          defalutValue: false
+          defaultValue: false
         }
       },
       {
@@ -184,7 +181,7 @@ class PointEditGUI extends ScriptUI.ModalFormData {
         id: "point_delete",
         label: "删除",
         setting: {
-          defalutValue: false
+          defaultValue: false
         }
       }
     ]);

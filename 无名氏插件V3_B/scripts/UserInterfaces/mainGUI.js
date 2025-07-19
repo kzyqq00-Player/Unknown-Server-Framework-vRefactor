@@ -4,9 +4,6 @@ import {
 import {
   UIManager
 } from "./init.js";
-import {
-  Options
-} from "../mainActivity.js"
 import * as mc from "@minecraft/server"
 
 class MainInterface extends ScriptUI.ActionFormData {
@@ -39,7 +36,7 @@ class MainInterface extends ScriptUI.ActionFormData {
           text: "领地"
         },
         condition: (player) => {
-          return Options.landOptions.enable;
+          return true;
         },
         event: (player) => {}
       },

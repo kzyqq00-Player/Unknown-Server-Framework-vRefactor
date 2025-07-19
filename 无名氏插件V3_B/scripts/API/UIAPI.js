@@ -9,12 +9,14 @@ import {
 from "@minecraft/server-ui";
 import * as mc from "@minecraft/server"
 
+//表格菜单返回值处理
 class ScriptModalFormDataRet {
   constructor(results) {
     this.results = Array.from(results);
   }
+  //获取id对应值
   get(id) {
-    mc.world.sendMessage(JSON.stringify(this.results));
+    //mc.world.sendMessage(JSON.stringify(this.results));
     for (let index = 0; index < this.results.length; index++) {
       if (this.results[index].id === id) {
         return this.results[index].result;
@@ -350,9 +352,14 @@ class ScriptModalFormData {
               }
             }
           } else {
-            mc.world.sendMessage(JSON.stringify(result.formValues));
-            for (let index = 0; index < buttonResults.length; index++) {
-              buttonResults[index].result = result.formValues[index];
+            let resultList = result.formValues.filter((value)=>{
+              if(value === null || value === undefined){
+                return false;
+              };
+              return true;
+            })
+            for(let index = 0; index < buttonResults.length; index++) {
+              buttonResults[index].result = resultList[index];
             };
             this.events(player, new ScriptModalFormDataRet(buttonResults));
           }

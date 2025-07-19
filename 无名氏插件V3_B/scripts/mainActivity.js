@@ -1,21 +1,26 @@
 import * as mc from "@minecraft/server"
-import { DefaultOptions } from "./options.js"
 import "./UserInterfaces/init.js";
 import "./Functions/init.js";
+import { Log } from "./API/API.js";
+import { DefaultOptions } from "./Options.js";
 
-let Options = DefaultOptions;
 
-/*function initOptions(DP, json){
-  
-}
-
-mc.world.afterEvents.worldLoad.subscribe(()=>{
-  Options = JSON.parse(mc.world.getDynamicProperty("plug-in-options"));
-  for(let key in DefaultOptions){
-    if(DefaultOptions[key]){
-      
+function LoadLog(obj, stringValue = ""){
+  for(let data in obj){
+    if(typeof(obj[data]) === "object" && !Array.isArray(obj[data])){
+      LoadLog(obj[data], stringValue + "." + data);
+    } else {
+      if(mc.world.getDynamicProperty(stringValue) === undefined){
+        mc.world.setDynamicProperty("usf:" + stringValue + "." + data, JSON.stringify(obj[data]));
+        //mc.world.sendMessage("usf:" + stringValue + "." + data + ": " + mc.world.getDynamicProperty("usf:" + stringValue + "." + data));
+      }
     }
   }
-});*/
+};
 
-export { Options };
+
+mc.world.afterEvents.worldLoad.subscribe(()=>{
+  
+  LoadLog(DefaultOptions);
+  Log.log("[USF]--加载成功");
+});
