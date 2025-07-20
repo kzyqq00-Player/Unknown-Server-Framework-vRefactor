@@ -39,6 +39,7 @@ function playerPointListIO(player, mode = 0, pl = []) {
   }
 };
 
+//世界传送点读/写
 function worldPointListIO(mode, list = []) {
   switch (mode) {
     case 1:
@@ -185,7 +186,6 @@ class PointEditGUI extends ScriptUI.ModalFormData {
         }
       }
     ]);
-    //bug
     this.setEvents((player, results) => {
       let points = (type === 1 ? playerPointListIO(player, 0) : worldPointListIO(0));
       points[pointIndex].name = (results.get("point_name") !== undefined ? results.get("point_name") : undefined);

@@ -4,13 +4,16 @@ import {
 import {
   UIManager
 } from "./init.js";
+import {
+  OpLevel
+} from "../API/API.js";
 import * as mc from "@minecraft/server"
 
 class MainInterface extends ScriptUI.ActionFormData {
   constructor() {
     super();
     this.setTitle("主菜单");
-    this.setInformation("test");
+    this.setInformation();
     this.setButtonsArray([{
         buttonDef: {
           text: "传送",
@@ -58,9 +61,14 @@ class MainInterface extends ScriptUI.ActionFormData {
           iconPath: undefined
         },
         condition: (player) => {
-
+          if(OpLevel.getLevel(player) > 0){
+            return true;
+          };
+          return false;
         },
-        event: (player) => {}
+        event: (player) => {
+          new (UIManager.getUI("ManagerGUI"))(player).sendToPlayer(player);
+        }
       }
     ]);
   };

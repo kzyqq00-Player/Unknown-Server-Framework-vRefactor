@@ -1,5 +1,6 @@
 import "./mainGUI.js";
 import "./teleportGUI.js";
+import "./managerGUI.js";
 let UI = {};
 
 class UIManager {

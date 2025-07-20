@@ -9,3 +9,12 @@ export class Log {
     console.warn(message);
   }
 };
+
+export class OpLevel {
+  static getLevel(player){
+    return player.getDynamicProperty("usf:opLevel");
+  }
+  static setLevel(player, level){
+    player.setDynamicProperty("usf:opLevel", level);
+  }
+}

@@ -30,6 +30,7 @@ class ScriptActionFormData {
   constructor() {
     this.buttonContainer = [];
     this.Divider = false;
+    this.cancel = false;
     return this;
   };
   //返回界面
@@ -96,6 +97,7 @@ class ScriptActionFormData {
   sendToPlayer(player) {
     if (this.beforeEvents !== undefined) {
       this.beforeEvents(player, this);
+      if(this.cancel === true)return;
     };
     if (player.typeId === "minecraft:player") {
       let ui = new ActionFormData();
@@ -137,6 +139,7 @@ class ScriptActionFormData {
 class ScriptMessageFormData {
   constructor() {
     this.events = [(player) => {}, (player) => {}];
+    this.cancel = false;
     return this;
   };
   //1 : 左下按钮文字 0: 右下按钮文字
@@ -179,6 +182,7 @@ class ScriptMessageFormData {
   sendToPlayer(player) {
     if (this.beforeEvents !== undefined) {
       this.beforeEvents(player, this);
+      if(this.cancel === true)return;
     };
     if (player.typeId === "minecraft:player") {
       let ui = new MessageFormData();
@@ -212,6 +216,7 @@ class ScriptMessageFormData {
 class ScriptModalFormData {
   constructor() {
     this.buttonContainer = [];
+    this.cancel = false;
     return this;
   };
   // UI: 父ui，即退出后进入的ui
@@ -288,6 +293,7 @@ class ScriptModalFormData {
   sendToPlayer(player) {
     if (this.beforeEvents !== undefined) {
       this.beforeEvents(player, this);
+      if(this.cancel === true)return;
     };
     if (player.typeId === "minecraft:player") {
       let ui = new ModalFormData();

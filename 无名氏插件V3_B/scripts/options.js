@@ -16,5 +16,6 @@ export var DefaultOptions = {
   },
   mamagerList: [
     //写玩家名
+    "cw1551"
   ]
 }
