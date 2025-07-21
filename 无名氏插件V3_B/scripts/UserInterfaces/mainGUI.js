@@ -7,7 +7,7 @@ import {
 import {
   OpLevel
 } from "../API/API.js";
-import * as mc from "@minecraft/server"
+import * as mc from "@minecraft/server";
 
 class MainInterface extends ScriptUI.ActionFormData {
   constructor() {

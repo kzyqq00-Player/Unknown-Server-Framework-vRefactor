@@ -96,6 +96,7 @@ class AddPoint extends ScriptUI.ModalFormData {
   constructor(teleportId) {
     super();
     this.setTitle(`添加传送点 [${ teleportId === 1 ? "个人传送点" : teleportId === 2 ? "世界公共点" : ""}]`);
+    this.setFather(new (teleportId === 1 ? PersonalPoint : PublicWorldPoint)());
     //this.setInformation();
     this.setButtonsArray([{
       typeId: "textField",
@@ -161,6 +162,7 @@ class PointEditGUI extends ScriptUI.ModalFormData {
     super();
     this.setTitle(`编辑[${ type === 1 ? "个人传送点" : teleportId === 2 ? "世界公共点" : "" }]`);
     this.setInformation(`传送点名称：${point.name}\n维度：${point.location.dimensionId}\n坐标：${point.location.x}, ${point.location.y}, ${point.location.z}` + (type === 2 ? `\n创建者：${point.sender}` : ""));
+    this.setFather(new (teleportId === 1 ? PersonalPoint : PublicWorldPoint)());
     this.setButtonsArray([{
         typeId: "textField",
         id: "point_name",
@@ -224,6 +226,7 @@ class PointEditGUI extends ScriptUI.ModalFormData {
 class TeleportGUI extends ScriptUI.ActionFormData {
   constructor() {
     super();
+    this.setFather(new (UIManager.getUI("mainGUI"))());
     this.setTitle("传送界面");
     this.setButtonsArray([{
         buttonDef: {
@@ -252,7 +255,7 @@ mc.system.run(() => {
 
 
 
-//私人传送点界面
+//个人传送点界面
 class PersonalPoint extends PointList {
   constructor() {
     super();

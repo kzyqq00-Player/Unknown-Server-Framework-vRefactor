@@ -91,7 +91,7 @@ class ScriptActionFormData {
   };
   setButtonsArray(buttonArray) {
     this.buttonContainer = buttonArray;
-    return 0;
+    return this;
   };
 
   sendToPlayer(player) {
@@ -285,7 +285,7 @@ class ScriptModalFormData {
   setButtonsArray(buttonArray) {
     if (Array.isArray(buttonArray)) {
       this.buttonContainer = buttonArray;
-      return 0;
+      return this;
     };
     return 1;
   };
