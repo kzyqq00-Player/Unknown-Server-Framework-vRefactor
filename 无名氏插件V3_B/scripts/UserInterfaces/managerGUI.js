@@ -5,7 +5,7 @@ import {
   UIManager
 } from "./init.js";
 import {
-  OpLevel
+  USFPlayer
 } from "../API/API.js";
 import * as mc from "@minecraft/server";
 import "./manager/scoreBoard.js";
@@ -55,7 +55,7 @@ class ManagerInterface extends ScriptUI.ActionFormData {
   static typeId = "ManagerGUI";
   constructor(player) {
     super();
-    let level = OpLevel.getLevel(player);
+    let level = USFPlayer.opLevel.getLevel(player);
     this.setTitle("管理界面");
     this.setButtonsArray([{
         buttonDef: {

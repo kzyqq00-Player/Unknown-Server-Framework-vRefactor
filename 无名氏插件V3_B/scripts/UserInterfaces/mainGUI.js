@@ -5,7 +5,7 @@ import {
   UIManager
 } from "./init.js";
 import {
-  OpLevel
+  USFPlayer
 } from "../API/API.js";
 import * as mc from "@minecraft/server";
 
@@ -39,7 +39,7 @@ class MainInterface extends ScriptUI.ActionFormData {
           text: "领地"
         },
         condition: (player) => {
-          return true;
+          return JSON.parse(mc.world.getDynamicProperty("usf:.landOptions.enable"));
         },
         event: (player) => {}
       },
@@ -61,7 +61,7 @@ class MainInterface extends ScriptUI.ActionFormData {
           iconPath: undefined
         },
         condition: (player) => {
-          if(OpLevel.getLevel(player) > 0){
+          if(USFPlayer.opLevel.getLevel(player) > 0){
             return true;
           };
           return false;

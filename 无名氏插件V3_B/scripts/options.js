@@ -13,9 +13,5 @@ export var DefaultOptions = {
   },
   landOptions: {
     enable: true
-  },
-  mamagerList: [
-    //写玩家名
-    "cw1551"
-  ]
+  }
 }
