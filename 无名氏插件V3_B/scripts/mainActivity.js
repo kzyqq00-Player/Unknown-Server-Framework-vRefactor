@@ -4,7 +4,7 @@ import "./Functions/init.js";
 import { Log } from "./API/API.js";
 import { DefaultOptions } from "./Options.js";
 
-const USFVersion = "3.0.1-B";
+const USFVersion = "3.1.0-B";
 const MinecraftVersion = [1, 21, 94];
 
 function LoadDefaultConfig(obj, stringValue = ""){
@@ -12,10 +12,10 @@ function LoadDefaultConfig(obj, stringValue = ""){
     mc.world.setDynamicProperty("usf:playerGenId", 1);
   };
   if(mc.world.getDynamicProperty("usf:landList") === undefined){
-    mc.world.setDynamicProperty("usf:landList", JSON.stringify([]))
+    mc.world.setDynamicProperty("usf:landList", JSON.stringify([]));
   }
   for(let data in obj){
-    if(typeof(obj[data]) === "object" && !Array.isArray(obj[data])){
+    if(typeof(obj[data]) === typeof({}) && !Array.isArray(obj[data])){
       LoadDefaultConfig(obj[data], stringValue + "." + data);
     } else {
       if(mc.world.getDynamicProperty("usf:" + stringValue + "." + data) === undefined){

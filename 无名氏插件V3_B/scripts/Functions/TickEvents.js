@@ -1,7 +1,8 @@
 import * as mc from "@minecraft/server";
 import {
   Land,
-  USFPlayer
+  USFPlayer,
+  Vector
 } from "../API/API.js";
 
 let tick = 0;
@@ -41,7 +42,7 @@ mc.system.runInterval(() => {
             y: 0,
             z: 0
           });
-          for (let pos_x = land.pos.min.x; pos_x <= land.pos.max.x + 1; pos_x += 1) {
+          for (let pos_x = land.pos.min.x; pos_x <= land.pos.max.x; pos_x += 1) {
             player.dimension.spawnParticle("minecraft:blue_flame_particle", {
               x: pos_x,
               y: land.pos.min.y,
@@ -49,43 +50,43 @@ mc.system.runInterval(() => {
             }, molangMap);
             player.dimension.spawnParticle("minecraft:blue_flame_particle", {
               x: pos_x,
-              y: land.pos.max.y + 1,
+              y: land.pos.max.y,
               z: land.pos.min.z
             }, molangMap);
             player.dimension.spawnParticle("minecraft:blue_flame_particle", {
               x: pos_x,
               y: land.pos.min.y,
-              z: land.pos.max.z + 1
+              z: land.pos.max.z
             }, molangMap);
             player.dimension.spawnParticle("minecraft:blue_flame_particle", {
               x: pos_x,
-              y: land.pos.max.y + 1,
-              z: land.pos.max.z + 1
+              y: land.pos.max.y,
+              z: land.pos.max.z
             }, molangMap);
           };
-          for (let pos_y = land.pos.min.y; pos_y <= land.pos.max.y + 1; pos_y += 1) {
+          for (let pos_y = land.pos.min.y; pos_y <= land.pos.max.y; pos_y += 1) {
             player.dimension.spawnParticle("minecraft:blue_flame_particle", {
               x: land.pos.min.x,
               y: pos_y,
               z: land.pos.min.z
             }, molangMap);
             player.dimension.spawnParticle("minecraft:blue_flame_particle", {
-              x: land.pos.max.x + 1,
+              x: land.pos.max.x,
               y: pos_y,
               z: land.pos.min.z
             }, molangMap);
             player.dimension.spawnParticle("minecraft:blue_flame_particle", {
               x: land.pos.min.x,
               y: pos_y,
-              z: land.pos.max.z + 1
+              z: land.pos.max.z
             }, molangMap);
             player.dimension.spawnParticle("minecraft:blue_flame_particle", {
-              x: land.pos.max.x + 1,
+              x: land.pos.max.x,
               y: pos_y,
-              z: land.pos.max.z + 1
+              z: land.pos.max.z
             }, molangMap);
           };
-          for (let pos_z = land.pos.min.z; pos_z <= land.pos.max.z + 1; pos_z += 1) {
+          for (let pos_z = land.pos.min.z; pos_z <= land.pos.max.z; pos_z += 1) {
             player.dimension.spawnParticle("minecraft:blue_flame_particle", {
               x: land.pos.min.x,
               y: land.pos.min.y,
@@ -93,17 +94,17 @@ mc.system.runInterval(() => {
             }, molangMap);
             player.dimension.spawnParticle("minecraft:blue_flame_particle", {
               x: land.pos.min.x,
-              y: land.pos.max.y + 1,
+              y: land.pos.max.y,
               z: pos_z
             }, molangMap);
             player.dimension.spawnParticle("minecraft:blue_flame_particle", {
-              x: land.pos.max.x + 1,
+              x: land.pos.max.x,
               y: land.pos.min.y,
               z: pos_z
             }, molangMap);
             player.dimension.spawnParticle("minecraft:blue_flame_particle", {
-              x: land.pos.max.x + 1,
-              y: land.pos.max.y + 1,
+              x: land.pos.max.x,
+              y: land.pos.max.y,
               z: pos_z
             }, molangMap);
           }
@@ -116,8 +117,29 @@ mc.system.runInterval(() => {
         });
         if (landList.length > 0) {
           if (player.onScreenDisplay.isValid) {
-            player.onScreenDisplay.setActionBar(`你在{${landList[0].owner.name}}的领地中\n身份：${(USFPlayer.getId(player) === landList[0].owner.id ? "领地主" : "客人")}`);
+            player.onScreenDisplay.setActionBar(`你在{${landList[0].owner.name}}的领地中\n领地名：${landList[0].name}\n身份：${(USFPlayer.getId(player) === landList[0].owner.id ? "领地主" : "客人")}`);
           }
+        }
+      }
+    }
+  };
+  if(tick % 10 === 0){
+    let scoreBoardDL = JSON.parse(mc.world.getDynamicProperty("usf:.scoreboardDefaultValue"));
+    for(let sb_defaultValue of scoreBoardDL){
+      let scoreBoard = mc.world.scoreboard.getObjective(sb_defaultValue.id);
+      if(scoreBoard == null){
+        scoreBoardDL = scoreBoardDL.filter(sb =>{
+          if(sb.id === sb_defaultValue.id){
+            return false;
+          }
+          return true;
+        });
+        mc.world.setDynamicProperty("usf:.scoreboardDefaultValue", JSON.stringify(scoreBoardDL));
+        continue;
+      };
+      for(let player of mc.world.getAllPlayers()){
+        if(!scoreBoard.hasParticipant(player)){
+          scoreBoard.setScore(player, sb_defaultValue.value);
         }
       }
     }

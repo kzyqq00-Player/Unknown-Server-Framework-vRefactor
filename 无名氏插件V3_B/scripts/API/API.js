@@ -87,9 +87,9 @@ export class Land {
       this.dimensionId = data.dimension.id;
       this.pos = {
         max: {
-          x: (data.pos.from.x > data.pos.to.x ? data.pos.from.x : data.pos.to.x),
-          y: (data.pos.from.y > data.pos.to.y ? data.pos.from.y : data.pos.to.y),
-          z: (data.pos.from.z > data.pos.to.z ? data.pos.from.z : data.pos.to.z)
+          x: (data.pos.from.x > data.pos.to.x ? data.pos.from.x : data.pos.to.x) + 1,
+          y: (data.pos.from.y > data.pos.to.y ? data.pos.from.y : data.pos.to.y) + 1,
+          z: (data.pos.from.z > data.pos.to.z ? data.pos.from.z : data.pos.to.z) + 1
         },
         min: {
           x: (data.pos.from.x < data.pos.to.x ? data.pos.from.x : data.pos.to.x),

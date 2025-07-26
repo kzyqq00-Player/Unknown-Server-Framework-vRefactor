@@ -12,6 +12,9 @@ export var DefaultOptions = {
     }
   },
   landOptions: {
-    enable: true
-  }
+    enable: true,
+    cost: 1
+  },
+  //这个别动
+  scoreboardDefaultValue: []
 }

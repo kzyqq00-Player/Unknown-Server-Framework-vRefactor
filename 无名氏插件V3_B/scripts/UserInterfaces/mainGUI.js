@@ -30,6 +30,9 @@ class MainInterface extends ScriptUI.ActionFormData {
         buttonDef: {
           text: "聊天设置"
         },
+        condition: (player) => {
+          return false;
+        },
         event: (player) => {
 
         }
