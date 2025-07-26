@@ -23,7 +23,7 @@ class MainInterface extends ScriptUI.ActionFormData {
           return true;
         },
         event: (player) => {
-          new (UIManager.getUI("teleportGUI"))().sendToPlayer(player);
+          new(UIManager.getUI("teleportGUI"))().sendToPlayer(player);
         }
       },
       {
@@ -41,7 +41,9 @@ class MainInterface extends ScriptUI.ActionFormData {
         condition: (player) => {
           return JSON.parse(mc.world.getDynamicProperty("usf:.landOptions.enable"));
         },
-        event: (player) => {}
+        event: (player) => {
+          new(UIManager.getUI("LandGUI"))().sendToPlayer(player);
+        }
       },
       {
         buttonDef: {
@@ -61,16 +63,28 @@ class MainInterface extends ScriptUI.ActionFormData {
           iconPath: undefined
         },
         condition: (player) => {
-          if(USFPlayer.opLevel.getLevel(player) > 0){
+          if (USFPlayer.opLevel.getLevel(player) > 0) {
             return true;
           };
           return false;
         },
         event: (player) => {
-          new (UIManager.getUI("ManagerGUI"))(player).sendToPlayer(player);
+          new(UIManager.getUI("ManagerGUI"))(player).sendToPlayer(player);
         }
       }
     ]);
+    this.setBeforeSendEvents((player, ui) => {
+      if (player?.land?.create) {
+        if (player.isSneaking) {
+          delete player.land;
+        } else {
+          if (player?.land?.pos.length >= 2) {
+            new(UIManager.getUI("LandGUI").addLandGUI())().sendToPlayer(player);
+            ui.cancel = true;
+          }
+        }
+      }
+    });
   };
   static typeId = "mainGUI";
 };

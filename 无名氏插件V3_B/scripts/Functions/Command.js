@@ -3,8 +3,10 @@ import {
   USFPlayer,
   Log
 } from "../API/API.js";
+import { UIManager } from "../UserInterfaces/init.js";
+
 mc.system.beforeEvents.startup.subscribe((event) => {
-  event.customCommandRegistry.registerEnum("usf:function", ["get_owner", "tp", "manager", "reset_owner"]);
+  event.customCommandRegistry.registerEnum("usf:function", ["get_owner", "tp", "manager", "reset_owner", "cd", "menu"]);
   event.customCommandRegistry.registerCommand({
     cheatsRequired: false,
     description: "usf指令",
@@ -59,6 +61,12 @@ mc.system.beforeEvents.startup.subscribe((event) => {
             message: "重置失败",
             status: 1
           }
+        }
+        break;
+      case "cd":
+      case "menu":
+        if(source?.sourceEntity){
+          new (UIManager.getUI("mainGUI"))().sendToPlayer(source.sourceEntity);
         }
         break;
     }

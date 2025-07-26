@@ -11,6 +11,9 @@ function LoadDefaultConfig(obj, stringValue = ""){
   if(mc.world.getDynamicProperty("usf:playerGenId") === undefined){
     mc.world.setDynamicProperty("usf:playerGenId", 1);
   };
+  if(mc.world.getDynamicProperty("usf:landList") === undefined){
+    mc.world.setDynamicProperty("usf:landList", JSON.stringify([]))
+  }
   for(let data in obj){
     if(typeof(obj[data]) === "object" && !Array.isArray(obj[data])){
       LoadDefaultConfig(obj[data], stringValue + "." + data);
