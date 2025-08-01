@@ -4,7 +4,7 @@
         "description": "By 凋空凌\n此为EarthDLL的usf项目重写",
         "name": "服务器管理框架-Unknow Server Frame 支持mc版本：<1.21.94>",
         "uuid": "270ce464-c538-4ecc-bd24-52343b65b224",
-        "version": [3, 1, 1],
+        "version": [3, 1, 0],
         "min_engine_version": [1, 21, 94]
     },
     "modules": [
