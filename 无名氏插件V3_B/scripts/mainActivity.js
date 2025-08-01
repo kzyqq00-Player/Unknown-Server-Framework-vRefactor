@@ -28,6 +28,7 @@ function LoadDefaultConfig(obj, stringValue = ""){
 
 
 mc.world.afterEvents.worldLoad.subscribe(()=>{
+  Log.log("[USF]--加载中");
   LoadDefaultConfig(DefaultOptions);
   if(mc.world.getDynamicProperty("usf:owner") === undefined){
     Log.log("服主未选定，输入/usf:func get_owner 选为服主");

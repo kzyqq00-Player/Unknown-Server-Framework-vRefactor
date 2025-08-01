@@ -1,4 +1,4 @@
-export var DefaultOptions = {
+export const DefaultOptions = {
   openMainItemList: [
     "minecraft:clock"
   ],
@@ -15,6 +15,6 @@ export var DefaultOptions = {
     enable: true,
     cost: 1
   },
-  //这个别动
+  //下面的设置别动（实际上是懒得写东西初使化了）
   scoreboardDefaultValue: []
 }

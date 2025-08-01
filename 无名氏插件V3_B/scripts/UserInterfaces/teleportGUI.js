@@ -277,12 +277,6 @@ class PersonalPoint extends PointList {
 
 //世界公共点
 
-/*
-  data: {
-    type: "group" / "point",
-    value: <data>[] / point
-  }
-*/
 
 class PublicWorldPoint extends PointList {
   constructor() {
