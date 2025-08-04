@@ -160,9 +160,9 @@ class PointInfo extends ScriptUI.ActionFormData {
 class PointEditGUI extends ScriptUI.ModalFormData {
   constructor(point, pointIndex, type) {
     super();
-    this.setTitle(`编辑[${ type === 1 ? "个人传送点" : teleportId === 2 ? "世界公共点" : "" }]`);
+    this.setTitle(`编辑[${ type === 1 ? "个人传送点" : type === 2 ? "世界公共点" : "" }]`);
     this.setInformation(`传送点名称：${point.name}\n维度：${point.location.dimensionId}\n坐标：${point.location.x}, ${point.location.y}, ${point.location.z}` + (type === 2 ? `\n创建者：${point.sender}` : ""));
-    this.setFather(new (teleportId === 1 ? PersonalPoint : PublicWorldPoint)());
+    this.setFather(new (type === 1 ? PersonalPoint : PublicWorldPoint)());
     this.setButtonsArray([{
         typeId: "textField",
         id: "point_name",
