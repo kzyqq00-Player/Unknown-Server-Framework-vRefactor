@@ -12,14 +12,17 @@ import * as mc from "@minecraft/server"
 //表格菜单返回值处理
 class ScriptModalFormDataRet {
   constructor(results) {
-    this.results = Array.from(results);
+    this.data = Array.from(results);
+    /*for(let key in results){
+      this.data[key] = results[key];
+    }*/
   }
   //获取id对应值
   get(id) {
     //mc.world.sendMessage(JSON.stringify(this.results));
-    for (let index = 0; index < this.results.length; index++) {
-      if (this.results[index].id === id) {
-        return this.results[index].result;
+    for (let index = 0; index < this.data.length; index++) {
+      if (this.data[index].id === id) {
+        return this.data[index].result;
       }
     }
   }
