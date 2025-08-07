@@ -11,7 +11,7 @@ mc.world.beforeEvents.playerInteractWithBlock.subscribe((event) => {
 	if (JSON.parse(mc.world.getDynamicProperty("usf:.openMainItemList")).includes(event.itemStack?.typeId)) {
 		event.cancel = true;
 		mc.system.run(() => {
-			new(UIManager.getUI("mainGUI"))().sendToPlayer(event.player);
+		new(UIManager.getUI("mainGUI"))().sendToPlayer(event.player);
 		});
 	};
 	//领地交互检测

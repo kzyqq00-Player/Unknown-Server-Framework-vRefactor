@@ -6,4 +6,3 @@ import "./PlayerPlaceBlockEvents.js";
 import "./DimensionChangeEvents.js";
 import "./PlayerBreakBlockEvents.js";
 import "./playerInteractWithEntityEvents.js";
-import "./ItemUse.js";
