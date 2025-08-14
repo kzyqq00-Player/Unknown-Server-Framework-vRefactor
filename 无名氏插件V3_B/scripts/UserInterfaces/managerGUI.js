@@ -81,8 +81,16 @@ class ManagerInterface extends ScriptUI.ActionFormData {
         }
       },
       {
+      	buttonDef: {
+      		text: "自定义UI（半完成）"
+      	},
+      	event: (player)=>{
+      		new (UIManager.getUI("CustomManagerGUI"))().sendToPlayer(player);
+      	}
+      },
+      {
         buttonDef: {
-          text: "插件重要设置"
+          text: "插件重要设置（未完成）"
         },
         event: (player)=>{
         }

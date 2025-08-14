@@ -6,10 +6,13 @@ import {
 import {
 	UIManager
 } from "../UserInterfaces/init.js";
+import {
+	CustomUI
+} from "../UserInterfaces/CustomUIGUI.js";
 
 mc.system.beforeEvents.startup.subscribe((event) => {
-	event.customCommandRegistry.registerEnum("usf:manager", ["get_owner", "reset_owner", "open"]);
-	event.customCommandRegistry.registerEnum("usf:func", ["cd", "menu", "tp"]);
+	event.customCommandRegistry.registerEnum("usf:manager", ["get_owner", "reset_owner"]);
+	event.customCommandRegistry.registerEnum("usf:func", ["cd", "menu", "tp", "open"]);
 	event.customCommandRegistry.registerCommand({
 		cheatsRequired: false,
 		description: "usf管理员指令",
@@ -76,8 +79,12 @@ mc.system.beforeEvents.startup.subscribe((event) => {
 		mandatoryParameters: [{
 			name: "usf:func",
 			type: "Enum"
+		}],
+		optionalParameters: [{
+		  name: "ui-uuid",
+		  type: "String"
 		}]
-	}, (source, arg) => {
+	}, (source, arg, ui_uuid) => {
 		if (source.sourceType !== "Entity") {
 			return {
 				message: "发送者非实体",
@@ -95,6 +102,13 @@ mc.system.beforeEvents.startup.subscribe((event) => {
       case "menu":
         if(source?.sourceEntity){
           new (UIManager.getUI("mainGUI"))().sendToPlayer(source.sourceEntity);
+        }
+        break;
+      case "open":
+        if(source?.sourceEntity.typeId === "minecraft:player"){
+        	if(ui_uuid?.length >= 36){
+        		new CustomUI(CustomUI.getUIFromUUID(ui_uuid)).sendToPlayer(source?.sourceEntity);
+        	}
         }
         break;
 		}

@@ -152,6 +152,13 @@ class PointInfo extends ScriptUI.ActionFormData {
       event: (player) => {
         new PointEditGUI(point, pointIndex, type).sendToPlayer(player);
       }
+    }, {
+      buttonDef: {
+        text: "删除"
+      },
+      event: (player)=>{
+      	new CheckPointDelete(point, pointIndex, type).sendToPlayer(player);
+      }
     }]);
   }
 }
@@ -178,14 +185,6 @@ class PointEditGUI extends ScriptUI.ModalFormData {
         setting: {
           defaultValue: false
         }
-      },
-      {
-        typeId: "toggle",
-        id: "point_delete",
-        label: "删除",
-        setting: {
-          defaultValue: false
-        }
       }
     ]);
     this.setEvents((player, results) => {
@@ -204,10 +203,7 @@ class PointEditGUI extends ScriptUI.ModalFormData {
           dimensionId: player.dimension.id
         }
       };
-      if (results.get("point_delete")) {
-        points.splice(pointIndex, 1);
-      };
-      type === 1 ? playerPointListIO(player, 1, points) : worldPointListIO(1, points);
+      (type === 1 ? playerPointListIO(player, 1, points) : worldPointListIO(1, points));
     });
   }
 }
@@ -296,3 +292,21 @@ class PublicWorldPoint extends PointList {
     }, 2);
   }
 };
+
+class CheckPointDelete extends ScriptUI.MessageFormData {
+  constructor(point, pointIndex, type){
+    super();
+    this.setTitle("删除传送点");
+    this.setInformation(`传送点名称：${point.name}`);
+    this.setFather(new PointInfo(point, pointIndex, type));
+    this.setButton(0, "取消", (player)=>{
+      new PointInfo(point, pointIndex, type).sendToPlayer(player);
+    });
+    this.setButton(1, "删除", (player)=>{
+      let points = (type === 1 ? playerPointListIO(player, 0) : worldPointListIO(0));
+      points.splice(pointIndex, 1);
+      (type === 1 ? playerPointListIO(player, 1, points) : worldPointListIO(1, points));
+      new (type === 1 ? PersonalPoint : PublicWorldPoint)().sendToPlayer(player);
+    });
+  }
+}

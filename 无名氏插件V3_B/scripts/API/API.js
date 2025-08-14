@@ -1,6 +1,6 @@
 import * as mc from "@minecraft/server"
 //0-37778931862957161709568
-function UUID() {
+export function UUID() {
   let time = new Date().getTime();
   let string_uuid = "";
   for (let i = 0; i < 36; i++) {

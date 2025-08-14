@@ -147,13 +147,13 @@ class ScriptMessageFormData {
   };
   //1 : 左下按钮文字 0: 右下按钮文字
   setButton(id, text, events = undefined) {
-    if (id === 1) {
+    if (id === 0) {
       this.button1 = text;
       if (events !== undefined) {
         this.events[0] = events;
       }
     };
-    if (id === 2) {
+    if (id === 1) {
       this.button2 = text;
       if (events !== undefined) {
         this.events[1] = events;

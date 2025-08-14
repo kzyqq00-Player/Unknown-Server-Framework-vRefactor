@@ -54,7 +54,7 @@ class MainInterface extends ScriptUI.ActionFormData {
 					iconPath: undefined
 				},
 				/*condition: (player) => {
-				  return true;
+					return true;
 				},*/
 				event: (player) => {
 					player.kill();
@@ -77,11 +77,14 @@ class MainInterface extends ScriptUI.ActionFormData {
 			}
 		]);
 		this.setBeforeSendEvents((player, ui) => {
+			//修sb ojang的键鼠bug
 			if (Date.now() - (player?.openTime ? player.openTime : 0) < 1000) {
-			  ui.cancel = true;
+				ui.cancel = true;
 				return;
 			};
 			player.openTime = Date.now();
+
+
 			if (player?.land?.create) {
 				if (player.isSneaking) {
 					delete player.land;
