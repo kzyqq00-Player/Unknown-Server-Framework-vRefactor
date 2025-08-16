@@ -46,11 +46,15 @@ function CustomUIIO(mode = 0, UIList = [], uuid) {
 export class CustomUI {
 	constructor(uiData) {
 		this.data = uiData;
+		this.ui = (uiData.type === 1 ? new ScriptUI.ActionFormData() : new ScriptUI.ModalFormData());
+		this.ui.setTitle(uiData.title);
+		if(uiData.label)this.ui.setInformation(uiData.label);
+		this.ui.setCloseEvents((player) => {
+			for (let command of this.data.closeCommands) {
+				player.runCommand(command);
+			}
+		});
 		if (uiData.type === 1) {
-			this.ui = new ScriptUI.ActionFormData();
-			this.ui.setTitle(uiData.title);
-			this.ui.setInformation(uiData.label);
-			if (uiData.close !== null) this.ui.setFather(uiData.close);
 			for (let button of uiData.buttonArray) {
 				button.event = (player) => {
 					for (let command of button.commandList) {
@@ -92,7 +96,7 @@ export class CustomUI {
 		//mc.world.sendMessage("getStringData--" + JSON.stringify(uiData));
 		switch (uiData.type) {
 			case (1):
-				let strData = `${uiData.type}|${uiData.title}|${uiData.label}|${uiData.uuid}|${(uiData.close === null ? "null" : uiData.close)}|${JSON.stringify(uiData.buttonArray)}`;
+				let strData = `${uiData.type}|${uiData.title}|${uiData.label}|${uiData.uuid}|${JSON.stringify(uiData.closeCommands)}|${JSON.stringify(uiData.buttonArray)}`;
 				//mc.world.sendMessage(strData);
 				return strData;
 				break;
@@ -110,7 +114,7 @@ export class CustomUI {
 						title: dataArray[1],
 						label: dataArray[2],
 						uuid: dataArray[3],
-						close: (dataArray[4] === "null" ? null : dataArray[4]),
+						closeCommands: JSON.parse(dataArray[4]),
 						buttonArray: JSON.parse(dataArray[5])
 				}
 				break;
@@ -120,7 +124,7 @@ export class CustomUI {
 						title: dataArray[1],
 						label: dataArray[2],
 						uuid: dataArray[3],
-						close: (dataArray[4] === "null" ? null : dataArray[4]),
+						closeCommands: JSON.parse(dataArray[4]),
 						buttonArray: JSON.parse(dataArray[5]),
 						event: JSON.parse(dataArray[6])
 				}
@@ -177,7 +181,7 @@ class AddCustomUIType extends ScriptUI.ModalFormData {
 				id: "ui_type",
 				label: "界面类型",
 				setting: {
-					items: ["列表", "表单（未完成）"]
+					items: ["列表", "表单（无效，不知道怎么写信息处理方式）"]
 				}
 			},
 			{
@@ -200,7 +204,7 @@ class AddCustomUIType extends ScriptUI.ModalFormData {
 					title: res.get("ui_title"),
 					label: "",
 					buttonArray: [],
-					close: null,
+					closeCommands: [],
 					uuid: UUID()
 				}).sendToPlayer(player);
 			}
@@ -208,21 +212,78 @@ class AddCustomUIType extends ScriptUI.ModalFormData {
 	}
 };
 
-//-----------------------------------
+class CommandAfterCloseUI extends ScriptUI.ModalFormData {
+	constructor(uiData) {
+		super();
+		let commandIndex = 1;
+		this.setTitle("关闭UI后运行指令");
+		for (let command of uiData.closeCommands) {
+			this.addButton({
+				typeId: "textField",
+				label: "指令-" + commandIndex,
+				id: "command-" + commandIndex,
+				setting: {
+					defaultValue: command
+				}
+			});
+			commandIndex++;
+		};
+		this.addButton({
+			typeId: "toggle",
+			label: "添加指令",
+			id: "addCommand",
+			setting: {}
+		});
+		this.addButton({
+			typeId: "toggle",
+			label: "清除空指令行",
+			id: "clear",
+			setting: {}
+		});
+		this.addButton({
+			typeId: "toggle",
+			label: "保存",
+			id: "save",
+			setting: {}
+		});
+		this.setEvents((player, result) => {
+			let commands = [];
+			for (let commandResIndex = 1; commandResIndex < commandIndex; commandResIndex++) {
+				let command = result.get("command-" + commandResIndex);
+				if (result.get("clear") && command.length === 0) continue;
+				commands.push(command);
+			};
+			if (result.get("addCommand")) {
+				commands.push("");
+			};
+			uiData.closeCommands = commands;
+			if (result.get("save")) {
+				switch (uiData.type) {
+					case 1:
+						new CustomListUIOptions(uiData).sendToPlayer(player);
+						break;
+				}
+			} else {
+				new CommandAfterCloseUI(uiData).sendToPlayer(player);
+			}
+		});
+	}
+}
 
+//-----------------------------------
+//列表UI
 /*
-  listUI:
-  {
-  	type: 1,
-    title: String,
-    label: String,
-    uuid: String,
-    buttons: Array< button extends ScriptUI.ActionFormData.button {
-      commandList: []<command>,
-      nextUI: UI / null
-    }>
-    close: UI / null
-  }
+	listUI:
+	{
+		type: 1,
+		title: String,
+		label: String,
+		uuid: String,
+		buttons: Array< button extends ScriptUI.ActionFormData.button {
+			commandList: []<command>
+		}>
+		closeCommands: commandList[]
+	}
 */
 
 class CustomListUIOptions extends ScriptUI.ActionFormData {
@@ -231,7 +292,7 @@ class CustomListUIOptions extends ScriptUI.ActionFormData {
 		title: "",
 		label: "",
 		buttonArray: [],
-		close: null,
+		closeCommands: [],
 		uuid: undefined
 	}) {
 		super();
@@ -260,15 +321,17 @@ class CustomListUIOptions extends ScriptUI.ActionFormData {
 							player.runCommand(command);
 						}
 					},
-					commandList: [],
-					nextUI: null
+					commandList: []
 				});
 				new CustomListUIOptions(uiData).sendToPlayer(player);
 			}
 		});
 		this.addButton({
 			buttonDef: {
-				text: "关闭后开启UI"
+				text: "关闭后运行指令"
+			},
+			event: (player) => {
+				new CommandAfterCloseUI(uiData).sendToPlayer(player);
 			}
 		});
 		this.addButton({
@@ -283,7 +346,7 @@ class CustomListUIOptions extends ScriptUI.ActionFormData {
 };
 
 class CustomListUIButtonEdit extends ScriptUI.ModalFormData {
-	constructor(uiData, index) {
+	constructor(uiData, buttonIndex) {
 		super();
 		this.setTitle("编辑UI");
 		this.setFather(new CustomListUIOptions(uiData));
@@ -293,10 +356,10 @@ class CustomListUIButtonEdit extends ScriptUI.ModalFormData {
 			label: "按钮名称",
 			id: "button_name",
 			setting: {
-				defaultValue: uiData.buttonArray[index].buttonDef.text
+				defaultValue: uiData.buttonArray[buttonIndex].buttonDef.text
 			}
 		});
-		for (let command of uiData.buttonArray[index].commandList) {
+		for (let command of uiData.buttonArray[buttonIndex].commandList) {
 			this.addButton({
 				typeId: "textField",
 				label: "指令-" + commandIndex,
@@ -318,30 +381,41 @@ class CustomListUIButtonEdit extends ScriptUI.ModalFormData {
 			label: "清除空指令行",
 			id: "clear",
 			setting: {}
-		})
+		});
 		this.addButton({
 			typeId: "toggle",
 			label: "保存",
 			id: "save",
 			setting: {}
 		});
+		this.addButton({
+			typeId: "toggle",
+			label: "删除按钮",
+			id: "delete",
+			setting: {}
+		});
 		this.setEvents((player, result) => {
-			uiData.buttonArray[index].buttonDef.text = result.get("button_name");
-			delete uiData.buttonArray[index].commandList;
+			uiData.buttonArray[buttonIndex].buttonDef.text = result.get("button_name");
+			delete uiData.buttonArray[buttonIndex].commandList;
 			let commands = [];
 			for (let commandResIndex = 1; commandResIndex < commandIndex; commandResIndex++) {
 				let command = result.get("command-" + commandResIndex);
 				if (result.get("clear") && command.length === 0) continue;
 				commands.push(command);
 			};
-			uiData.buttonArray[index].commandList = commands;
+			uiData.buttonArray[buttonIndex].commandList = commands;
 			if (result.get("addCommand")) {
-				uiData.buttonArray[index].commandList.push("");
+				uiData.buttonArray[buttonIndex].commandList.push("");
+			};
+			if (result.get("delete")) {
+				uiData.buttonArray.splice(buttonIndex, 1);
+				new CustomListUIOptions(uiData).sendToPlayer(player);
+				return;
 			};
 			if (result.get("save")) {
 				new CustomListUIOptions(uiData).sendToPlayer(player);
 			} else {
-				new CustomListUIButtonEdit(uiData, index).sendToPlayer(player);
+				new CustomListUIButtonEdit(uiData, buttonIndex).sendToPlayer(player);
 			}
 		})
 	}
@@ -369,11 +443,11 @@ class CustomListUIEdit extends ScriptUI.ModalFormData {
 				}
 			},
 			/*{
-			  type: "dropdown"
+				type: "dropdown"
 			},*/
 			{
 				typeId: "toggle",
-				label: "编辑按钮",
+				label: "编辑内容及关闭事件",
 				id: "button_edit",
 				setting: {
 					defaultValue: false
@@ -415,3 +489,5 @@ class CustomListUIEdit extends ScriptUI.ModalFormData {
 }
 
 //--------------------------------------
+
+//表格UI

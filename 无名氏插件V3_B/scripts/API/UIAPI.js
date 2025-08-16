@@ -92,6 +92,9 @@ class ScriptActionFormData {
     this.beforeEvents = events;
     return this;
   };
+  setCloseEvents(events){
+  	this.closeEvents = events;
+  };
   setButtonsArray(buttonArray) {
     this.buttonContainer = buttonArray;
     return this;
@@ -126,6 +129,9 @@ class ScriptActionFormData {
               return;
             };
             if (result.cancelationReason === "UserClosed") {
+            	if(this.closeEvents !== undefined){
+            		this.closeEvents(player);
+            	};
               if (this.father !== undefined) {
                 this.father.sendToPlayer(player);
               }
@@ -181,6 +187,9 @@ class ScriptMessageFormData {
     this.beforeEvents = events;
     return this;
   };
+  setCloseEvents(events){
+  	this.closeEvents = events;
+  };
   //发送给玩家
   sendToPlayer(player) {
     if (this.beforeEvents !== undefined) {
@@ -203,6 +212,9 @@ class ScriptMessageFormData {
               return;
             };
             if (result.cancelationReason === "UserClosed") {
+            	if(this.closeEvents !== undefined){
+            		this.closeEvents(player);
+            	};
               if (this.father !== undefined) {
                 this.father.sendToPlayer(player);
               }
@@ -241,6 +253,9 @@ class ScriptModalFormData {
   };
   setBeforeSendEvents(events) {
     this.beforeEvents = events;
+  };
+  setCloseEvents(events){
+  	this.closeEvents = events;
   };
   /*
     widget: {
@@ -356,6 +371,9 @@ class ScriptModalFormData {
               return;
             };
             if (result.cancelationReason === "UserClosed") {
+            	if(this.closeEvents !== undefined){
+            		this.closeEvents(player);
+            	};
               if (this.father !== undefined) {
                 this.father.sendToPlayer(player);
               }
