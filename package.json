@@ -1,0 +1,23 @@
+{
+  "name": "unknown-server-framework-v4",
+  "version": "1.0.0",
+  "description": "USF-vRefactor",
+  "scripts": {
+    "build": "node ./build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kzyqq00-Player/Unknown-Server-Framework-vRefactor.git"
+  },
+  "devDependencies": {
+    "@minecraft/server": "2.2.0-rc.1.21.110-preview.26",
+    "@minecraft/server-ui": "2.1.0-beta.1.21.95-stable",
+    "webpack": "latest",
+    "webpack-cli": "latest",
+    "clean-webpack-plugin": "latest",
+    "typescript": "latest",
+    "archiver": "latest",
+    "@types/archiver": "latest"
+  },
+  "private": true
+}

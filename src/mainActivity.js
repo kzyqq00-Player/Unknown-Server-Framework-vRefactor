@@ -6,7 +6,7 @@ import {
 } from "./API/API.js";
 import {
 	DefaultOptions
-} from "./Options.js";
+} from "./options.js";
 
 const USFVersion = "3.1.0-B";
 const MinecraftVersion = [1, 21, 94];
